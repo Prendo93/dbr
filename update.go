@@ -110,3 +110,8 @@ func (b *UpdateStmt) Join(table, on interface{}) *UpdateStmt {
 	b.JoinTable = append(b.JoinTable, join(inner, table, on))
 	return b
 }
+
+func (b *UpdateStmt) LeftJoin(table, on interface{}) *UpdateStmt {
+	b.JoinTable = append(b.JoinTable, join(left, table, on))
+	return b
+}

@@ -20,7 +20,11 @@ func (b *DeleteStmt) Build(d Dialect, buf Buffer) error {
 		return ErrTableNotSpecified
 	}
 
-	buf.WriteString("DELETE FROM ")
+	buf.WriteString("DELETE ")
+	if len(b.JoinTable) > 0 {
+		buf.WriteString(d.QuoteIdent(b.Table) + " ")
+	}
+	buf.WriteString("FROM ")
 	buf.WriteString(d.QuoteIdent(b.Table))
 
 	if len(b.JoinTable) > 0 {
@@ -73,5 +77,11 @@ func (b *DeleteStmt) Where(query interface{}, value ...interface{}) *DeleteStmt 
 // Join joins table on condition
 func (b *DeleteStmt) Join(table, on interface{}) *DeleteStmt {
 	b.JoinTable = append(b.JoinTable, join(inner, table, on))
+	return b
+}
+
+// Join joins table on condition
+func (b *DeleteStmt) LeftJoin(table, on interface{}) *DeleteStmt {
+	b.JoinTable = append(b.JoinTable, join(left, table, on))
 	return b
 }
